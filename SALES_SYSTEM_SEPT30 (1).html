@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HHH Bookkeeping Services</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fff3f4;--card:#fffdfd;--line:#f2b3bc;--head:#fbd5da;--ink:#2a1e20;--mute:#7d6669;--acc:#2f8f5b;--accink:#fff;--warn:#c0392b;--ban:#3f9a68}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f1517;--card:#2a1d20;--line:#7a4550;--head:#4a2a31;--ink:#f7eaec;--mute:#bb9ca0;--acc:#6fcf97;--accink:#10201a;--warn:#ff8a80;--ban:#2b5e42}}
+:root[data-theme="dark"]{--bg:#1f1517;--card:#2a1d20;--line:#7a4550;--head:#4a2a31;--ink:#f7eaec;--mute:#bb9ca0;--acc:#6fcf97;--accink:#10201a;--warn:#ff8a80;--ban:#2b5e42}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px;background:var(--ban);color:#fff;padding:14px 16px;border-radius:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{background:#fde4e8;color:var(--ban);font-weight:800;border-radius:10px;padding:8px 10px;letter-spacing:.04em}
+.sub{font-size:13px;opacity:.85}
+.top button{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.45)}
+.top button.on{background:#fde4e8;color:#24593d;border-color:#fde4e8}
+.mrow{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:12px}
+.chips,.mact{display:flex;flex-wrap:wrap;gap:6px}
+.chip small{opacity:.7}
+h2.mt{margin:0 0 10px;font-size:20px}
+h1{font-size:22px;margin:0}
+.tabs,.modes{display:flex;gap:6px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px}
+button.on{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+button.sm{padding:2px 8px;font-size:13px}
+button.del{color:var(--warn)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:12px}
+form.in{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+input{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:0}
+form.in input{flex:1 1 120px}
+form.in .nm{flex:2 1 180px}form.in .ad{flex:2 1 180px}
+.hint{min-height:20px;font-size:13px;color:var(--acc);margin:0 0 8px}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:middle}
+th{background:var(--head);font-size:12px;text-transform:uppercase;letter-spacing:.02em}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td input{width:100%;padding:4px 6px}
+tfoot td{font-weight:600;background:var(--head)}
+td.closed{text-align:center;font-weight:700;letter-spacing:.35em;color:var(--mute);background:var(--head)}
+.empty{color:var(--mute);text-align:center;padding:18px}
+.act{white-space:nowrap;width:1%}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.show{opacity:1}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.last{border:2px dashed var(--acc);background:var(--card);border-radius:10px;padding:8px 10px;margin:0 0 10px}
+.last .lb{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--acc);margin:0 0 6px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<div class="top">
+  <div class="brand"><div class="logo">HHH</div><div><h1>HHH Bookkeeping Services</h1><div class="sub">Books of Accounts</div></div></div>
+  <div class="tabs">
+    <button id="tSales" class="on">Sales Book</button>
+    <button id="tCust">Customer Database</button>
+  </div>
+  <div class="tabs">
+    <button id="bkExp" title="Download all data as a .json backup">Export Backup (JSON)</button>
+    <button id="bkImp" title="Restore data from a .json backup">Import Backup (JSON)</button>
+    <input type="file" id="bkFile" accept=".json,application/json" hidden>
+  </div>
+</div>
+
+<section id="vSales" class="panel">
+  <h2 class="mt">Sales Book &mdash; <span id="mTitle"></span></h2>
+  <div class="mrow">
+    <div id="months" class="chips"></div>
+    <div class="mact"><button id="newM" class="on">+ New Month</button><button id="renM" class="sm">Rename</button><button id="delM" class="sm del">Delete month</button></div>
+  </div>
+  <div class="bar">
+    <div></div>
+    <div class="mact"><button id="exSales">Export to Excel</button><button id="exAll">Export All Months</button></div>
+  </div>
+  <form class="in" id="f" autocomplete="off">
+    <input id="fDate" class="cx" placeholder="Date (07/12)" title="Optional. MM/DD">
+    <input id="fName" class="nm" placeholder="Name (First Last)">
+    <input id="fAddr" class="ad" placeholder="Address (Brgy, Municipality)">
+    <input id="fAmt" class="cx" type="number" step="0.01" min="0" placeholder="Amount">
+    <input id="fInv" class="cx" placeholder="Invoice Number">
+    <input id="fTin" placeholder="TIN (optional)">
+    <button type="submit" class="on">Add</button>
+    <button type="button" id="fClosed" class="cx" title="Enter the date, then click to record that the business was closed that day">Mark day closed</button>
+  </form>
+  <p class="hint" id="hint"></p>
+  <div class="last" id="last" hidden></div>
+  <div class="wrap"><table id="tblS"></table></div>
+</section>
+
+<section id="vCust" class="panel" hidden>
+  <div class="bar"><h2 style="margin:0;font-size:22px">Customer Database</h2><button id="exCust">Export to Excel</button></div>
+  <div class="wrap"><table id="tblC"></table></div>
+</section>
+</main>
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+var KEY="salesbook.v1", S=normalize(null), mode="complete", tab="sales", editS=null, editC=null, lastId=null;
+var $=function(i){return document.getElementById(i)};
+function defMonth(){try{return new Date().toLocaleString("en",{month:"long",year:"numeric"})}catch(e){return"Month 1"}}
+function cleanSale(r){return{id:r.id||uid(),date:r.date||"",name:r.name||"",address:r.address||"",inv:r.inv||"",tin:r.tin||"",amt:r.amt==null||r.amt===""?null:Number(r.amt),closed:!!r.closed}}
+function normalize(p){
+  var o={months:[],cust:[],cur:null};
+  if(p&&Array.isArray(p.months))o.months=p.months.map(function(m){return{id:m.id||uid(),name:String(m.name||"Untitled"),sales:(m.sales||[]).map(cleanSale)}});
+  else if(p&&Array.isArray(p.sales))o.months=[{id:uid(),name:defMonth(),sales:p.sales.map(cleanSale)}];
+  o.cust=(p&&Array.isArray(p.cust)?p.cust:[]).map(function(c){return{id:c.id||uid(),name:c.name||"",address:c.address||"",tin:c.tin||""}});
+  if(!o.months.length)o.months=[{id:uid(),name:defMonth(),sales:[]}];
+  o.cur=p&&o.months.some(function(m){return m.id===p.cur})?p.cur:o.months[0].id;
+  return o;
+}
+function M(){return S.months.filter(function(m){return m.id===S.cur})[0]||S.months[0]}
+try{var raw=localStorage.getItem(KEY);if(raw)S=normalize(JSON.parse(raw))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function fmtDate(s){s=(s||"").trim();var m=s.match(/^(\d{1,2})[\/\-](\d{1,2})$/);if(m&&+m[1]>=1&&+m[1]<=12)return MON[+m[1]-1]+"-"+(+m[2]);return s}
+function money(n){return n==null||isNaN(n)?"":Number(n).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function calc(r){var a=r.amt;return a==null?{tax:null,vat:null}:{tax:a*0.12,vat:a/1.12}}
+function incInv(s){var m=String(s||"").match(/^(.*?)(\d+)$/);if(!m)return"";return m[1]+String(+m[2]+1).padStart(m[2].length,"0")}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function toast(t){var el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove("show")},2600)}
+function findCust(n){return S.cust.filter(function(c){return c.name.toLowerCase()===n.toLowerCase()})[0]}
+function upsertCust(name,addr,tin){if(!name)return;var c=findCust(name);if(!c){S.cust.push({id:uid(),name:name,address:addr,tin:tin})}else{if(addr&&!c.address)c.address=addr;if(tin&&!c.tin)c.tin=tin}}
+
+/* ---------- render ---------- */
+function renderMonths(){
+  $("months").innerHTML=S.months.map(function(m){return "<button class='chip"+(m.id===S.cur?" on":"")+"' data-m='"+m.id+"'>"+esc(m.name)+" <small>("+m.sales.length+")</small></button>"}).join("");
+  $("mTitle").textContent=M().name;
+}
+function lastInv(){var i=S.months.indexOf(M());for(;i>=0;i--){var r=S.months[i].sales.filter(function(x){return x.inv}).pop();if(r)return r.inv}return""}
+function setInv(){$("fInv").value=incInv(lastInv())}
+function renderS(){
+  renderMonths();
+  var cx=mode==="complete",h="",rows=M().sales;
+  h+="<thead><tr>"+(cx?"<th>Date</th>":"")+"<th>Name</th><th>Address</th>"+(cx?"<th>Invoice No.</th>":"")+"<th>"+(cx?"VAT Reg. No.":"TIN")+"</th>"+(cx?"<th class=n>Taxable 12%</th><th class=n>VAT Output</th><th class=n>Total Invoice Amount</th>":"")+"<th></th></tr></thead><tbody>";
+  var span=cx?9:4,tt=0,tv=0,ta=0;
+  if(!cx)rows=rows.filter(function(r){return !r.closed});
+  if(!rows.length)h+="<tr><td class=empty colspan="+span+">No entries yet.</td></tr>";
+  rows.forEach(function(r){
+    if(r.closed){
+      if(editS===r.id)h+="<tr data-id='"+r.id+"'><td><input data-k=date value='"+esc(r.date)+"'></td><td class=closed colspan=7>CLOSED</td><td class=act><button class='sm on' data-a=ok>Save</button> <button class=sm data-a=cancel>Cancel</button></td></tr>";
+      else h+="<tr data-id='"+r.id+"'><td>"+esc(fmtDate(r.date))+"</td><td class=closed colspan=7>CLOSED</td><td class=act><button class=sm data-a=edit>Edit</button> <button class='sm del' data-a=del>Delete</button></td></tr>";
+      return;
+    }
+    var c=calc(r);if(r.amt!=null){tt+=c.tax;tv+=c.vat;ta+=r.amt}
+    if(editS===r.id){
+      h+="<tr data-id='"+r.id+"'>"+(cx?"<td><input data-k=date value='"+esc(r.date)+"'></td>":"")+"<td><input data-k=name value='"+esc(r.name)+"'></td><td><input data-k=address value='"+esc(r.address)+"'></td>"+(cx?"<td><input data-k=inv value='"+esc(r.inv)+"'></td>":"")+"<td><input data-k=tin value='"+esc(r.tin)+"'></td>"+(cx?"<td class=n>"+money(c.tax)+"</td><td class=n>"+money(c.vat)+"</td><td><input data-k=amt type=number step=0.01 value='"+(r.amt==null?"":r.amt)+"'></td>":"")+"<td class=act><button class='sm on' data-a=ok>Save</button> <button class=sm data-a=cancel>Cancel</button></td></tr>";
+    }else{
+      h+="<tr data-id='"+r.id+"'>"+(cx?"<td>"+esc(fmtDate(r.date))+"</td>":"")+"<td>"+esc(r.name)+"</td><td>"+esc(r.address)+"</td>"+(cx?"<td>"+esc(r.inv)+"</td>":"")+"<td>"+esc(r.tin)+"</td>"+(cx?"<td class=n>"+money(c.tax)+"</td><td class=n>"+money(c.vat)+"</td><td class=n>"+money(r.amt)+"</td>":"")+"<td class=act><button class=sm data-a=edit>Edit</button> <button class='sm del' data-a=del>Delete</button></td></tr>";
+    }
+  });
+  h+="</tbody>";
+  if(cx&&rows.length)h+="<tfoot><tr><td colspan=5>Total</td><td class=n>"+money(tt)+"</td><td class=n>"+money(tv)+"</td><td class=n>"+money(ta)+"</td><td></td></tr></tfoot>";
+  $("tblS").innerHTML=h;
+  renderLast();
+}
+function renderLast(){
+  var el=$("last"),r=lastId&&M().sales.filter(function(x){return x.id===lastId})[0];
+  if(!r){el.hidden=true;el.innerHTML="";return}
+  var cx=mode==="complete",h="<div class=lb>Just added &mdash; please check</div><div class=wrap><table>";
+  h+="<thead><tr>"+(cx?"<th>Date</th>":"")+"<th>Name</th><th>Address</th>"+(cx?"<th>Invoice No.</th>":"")+"<th>"+(cx?"VAT Reg. No.":"TIN")+"</th>"+(cx?"<th class=n>Taxable 12%</th><th class=n>VAT Output</th><th class=n>Total Invoice Amount</th>":"")+"<th></th></tr></thead><tbody>";
+  var btn="<td class=act>"+((r.closed&&!cx)?"":"<button type=button class=sm data-a=edit>Edit</button> ")+"<button type=button class=sm data-a=hide>Dismiss</button></td>";
+  if(r.closed){
+    h+="<tr><td>"+esc(fmtDate(r.date))+"</td><td class=closed colspan=7>CLOSED</td>"+btn+"</tr>";
+  }else{
+    var c=calc(r);
+    h+="<tr>"+(cx?"<td>"+esc(fmtDate(r.date))+"</td>":"")+"<td>"+esc(r.name)+"</td><td>"+esc(r.address)+"</td>"+(cx?"<td>"+esc(r.inv)+"</td>":"")+"<td>"+esc(r.tin)+"</td>"+(cx?"<td class=n>"+money(c.tax)+"</td><td class=n>"+money(c.vat)+"</td><td class=n>"+money(r.amt)+"</td>":"")+btn+"</tr>";
+  }
+  el.innerHTML=h+"</tbody></table></div>";el.hidden=false;
+}
+$("last").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.a==="edit")editS=lastId;else lastId=null;
+  renderS();
+});
+function renderC(){
+  var h="<thead><tr><th style='width:56px'>No.</th><th>Name</th><th>Address</th><th>TIN</th><th></th></tr></thead><tbody>";
+  if(!S.cust.length)h+="<tr><td class=empty colspan=5>No customers yet. They are added automatically from the Sales Book.</td></tr>";
+  S.cust.forEach(function(c,i){
+    if(editC===c.id)h+="<tr data-id='"+c.id+"'><td>"+(i+1)+"</td><td><input data-k=name value='"+esc(c.name)+"'></td><td><input data-k=address value='"+esc(c.address)+"'></td><td><input data-k=tin value='"+esc(c.tin)+"'></td><td class=act><button class='sm on' data-a=ok>Save</button> <button class=sm data-a=cancel>Cancel</button></td></tr>";
+    else h+="<tr data-id='"+c.id+"'><td>"+(i+1)+"</td><td>"+esc(c.name)+"</td><td>"+esc(c.address)+"</td><td>"+esc(c.tin)+"</td><td class=act><button class=sm data-a=edit>Edit</button> <button class='sm del' data-a=del>Delete</button></td></tr>";
+  });
+  $("tblC").innerHTML=h+"</tbody>";
+}
+function applyMode(){
+  var cx=mode==="complete";
+  document.querySelectorAll(".cx").forEach(function(e){e.hidden=!cx});
+  renderS();
+}
+function nextInvHint(){var last=M().sales.filter(function(r){return r.inv}).pop();$("fInv").value=last?incInv(last.inv):$("fInv").value}
+
+/* ---------- autocomplete ---------- */
+var match=null;
+function updateHint(){
+  var v=$("fName").value.trim().toLowerCase();match=null;
+  if(v){match=S.cust.filter(function(c){return c.name.toLowerCase().indexOf(v)===0})[0]||null}
+  var needs=match&&(match.name!==$("fName").value.trim()||(!$("fAddr").value&&match.address)||(!$("fTin").value&&match.tin));
+  if(!needs)match=null;
+  $("hint").textContent=match?"Existing customer: "+match.name+(match.address?" — "+match.address:"")+(match.tin?" — TIN "+match.tin:"")+". Press Tab to autocomplete.":"";
+}
+$("fName").addEventListener("input",updateHint);
+$("fName").addEventListener("keydown",function(e){
+  if(e.key==="Tab"&&!e.shiftKey&&match){
+    e.preventDefault();
+    $("fName").value=match.name;$("fAddr").value=match.address||"";$("fTin").value=match.tin||"";
+    match=null;$("hint").textContent="";
+    (mode==="complete"?$("fAmt"):$("fTin")).focus();
+  }
+});
+
+/* ---------- add ---------- */
+$("f").addEventListener("submit",function(e){
+  e.preventDefault();
+  var name=$("fName").value.trim();
+  if(!name){toast("Name is required");$("fName").focus();return}
+  var cx=mode==="complete",amt=$("fAmt").value===""?null:parseFloat($("fAmt").value);
+  var r={id:uid(),date:cx?$("fDate").value.trim():"",name:name,address:$("fAddr").value.trim(),inv:cx?$("fInv").value.trim():"",tin:$("fTin").value.trim(),amt:cx?amt:null};
+  M().sales.push(r);lastId=r.id;upsertCust(r.name,r.address,r.tin);save();
+  var keepDate=$("fDate").value;
+  $("f").reset();$("fDate").value=keepDate;
+  if(r.inv)$("fInv").value=incInv(r.inv);
+  $("hint").textContent="";match=null;renderS();$("fName").focus();
+});
+
+$("fClosed").addEventListener("click",function(){
+  var d=$("fDate").value.trim();
+  if(!d){toast("Enter the date first (e.g. 07/12), then click Mark day closed");$("fDate").focus();return}
+  var cr={id:uid(),date:d,name:"",address:"",inv:"",tin:"",amt:null,closed:true};M().sales.push(cr);lastId=cr.id;
+  save();renderS();toast("Marked "+fmtDate(d)+" as closed");$("fDate").focus();
+});
+
+/* ---------- edit / delete ---------- */
+function rowVals(tr){var o={};tr.querySelectorAll("input").forEach(function(i){o[i.dataset.k]=i.value.trim()});return o}
+$("tblS").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;var tr=b.closest("tr"),id=tr.dataset.id,a=b.dataset.a;
+  if(a==="edit"){editS=id;renderS()}
+  else if(a==="cancel"){editS=null;renderS()}
+  else if(a==="del"){if(confirm("Delete this entry?")){M().sales=M().sales.filter(function(r){return r.id!==id});save();renderS()}}
+  else if(a==="ok"){var v=rowVals(tr),r=M().sales.filter(function(x){return x.id===id})[0];
+    if(!v.name&&!r.closed){toast("Name is required");return}
+    ["name","address","tin","inv","date"].forEach(function(k){if(k in v)r[k]=v[k]});
+    if("amt" in v)r.amt=v.amt===""?null:parseFloat(v.amt);
+    if(!r.closed)upsertCust(r.name,r.address,r.tin);editS=null;save();renderS()}
+});
+$("tblC").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;var tr=b.closest("tr"),id=tr.dataset.id,a=b.dataset.a;
+  if(a==="edit"){editC=id;renderC()}
+  else if(a==="cancel"){editC=null;renderC()}
+  else if(a==="del"){if(confirm("Delete this customer? Existing sales entries are kept.")){S.cust=S.cust.filter(function(c){return c.id!==id});save();renderC()}}
+  else if(a==="ok"){var v=rowVals(tr),c=S.cust.filter(function(x){return x.id===id})[0];
+    if(!v.name){toast("Name is required");return}
+    var dup=S.cust.filter(function(x){return x.id!==id&&x.name.toLowerCase()===v.name.toLowerCase()})[0];
+    if(dup){toast("A customer with that name already exists");return}
+    c.name=v.name;c.address=v.address;c.tin=v.tin;editC=null;save();renderC()}
+});
+
+/* ---------- tabs / modes ---------- */
+function setTab(t){tab=t;$("vSales").hidden=t!=="sales";$("vCust").hidden=t!=="cust";$("tSales").classList.toggle("on",t==="sales");$("tCust").classList.toggle("on",t==="cust");if(t==="cust")renderC()}
+$("tSales").onclick=function(){setTab("sales")};$("tCust").onclick=function(){setTab("cust")};
+
+/* ---------- export ---------- */
+function dl(name,data,type){
+  var url=URL.createObjectURL(new Blob([data],{type:type})),a=document.createElement("a");
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url)},1000);toast("Saved "+name);
+}
+function csv(aoa){return "\ufeff"+aoa.map(function(r){return r.map(function(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(",")}).join("\r\n")}
+function safeName(n){return String(n).replace(/[\[\]:*?\/\\]/g,"").trim().slice(0,31)||"Sheet"}
+function saveWb(sheets,file){
+  if(typeof XLSX==="undefined"){
+    sheets.forEach(function(sh){dl(file.replace(/\.xlsx$/,"")+(sheets.length>1?"_"+sh.name:"")+".csv",csv(sh.aoa),"text/csv")});
+    toast("Excel library not loaded (offline?). Saved as CSV instead.");return}
+  var wb=XLSX.utils.book_new(),used={};
+  sheets.forEach(function(sh){
+    var ws=XLSX.utils.aoa_to_sheet(sh.aoa);ws["!cols"]=sh.w.map(function(w){return{wch:w}});
+    var n=safeName(sh.name),k=n,i=2;while(used[k.toLowerCase()]){k=n.slice(0,28)+" ("+i+")";i++}
+    used[k.toLowerCase()]=1;XLSX.utils.book_append_sheet(wb,ws,k)});
+  dl(file,XLSX.write(wb,{type:"array",bookType:"xlsx"}),"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+}
+function salesSheet(m){
+  var aoa=[["DATE","NAME","ADDRESS","INVOICE NUMBER","VAT REG. NO.","TAXABLE 12%","VAT OUTPUT","TOTAL INVOICE AMOUNT"]],tt=0,tv=0,ta=0;
+  m.sales.forEach(function(r){if(r.closed){aoa.push([fmtDate(r.date),"CLOSED","","","","","",""]);return}var c=calc(r);if(r.amt!=null){tt+=c.tax;tv+=c.vat;ta+=r.amt}
+    aoa.push([fmtDate(r.date),r.name,r.address,r.inv,r.tin,c.tax==null?"":+c.tax.toFixed(2),c.vat==null?"":+c.vat.toFixed(2),r.amt==null?"":r.amt])});
+  if(m.sales.length)aoa.push(["","","","","TOTAL",+tt.toFixed(2),+tv.toFixed(2),+ta.toFixed(2)]);
+  return{name:m.name,aoa:aoa,w:[10,26,30,16,18,14,14,20]};
+}
+$("exSales").onclick=function(){var m=M();saveWb([salesSheet(m)],"Sales_Book_"+safeName(m.name).replace(/\s+/g,"_")+".xlsx")};
+$("exAll").onclick=function(){saveWb(S.months.map(salesSheet),"Sales_Book_All_Months.xlsx")};
+$("exCust").onclick=function(){
+  var aoa=[["No.","NAME","ADDRESS","TIN"]];S.cust.forEach(function(c,i){aoa.push([i+1,c.name,c.address,c.tin])});
+  saveWb([{name:"Customer Database",aoa:aoa,w:[6,28,34,18]}],"Customer_Database.xlsx");
+};
+
+/* ---------- months ---------- */
+function nameTaken(n,exceptId){return S.months.some(function(m){return m.id!==exceptId&&m.name.toLowerCase()===n.toLowerCase()})}
+function switchMonth(id){S.cur=id;editS=null;save();renderS();setInv();$("hint").textContent=""}
+$("months").addEventListener("click",function(e){var b=e.target.closest("button");if(b)switchMonth(b.dataset.m)});
+$("newM").onclick=function(){
+  var n=prompt("Name of the new month (e.g. August 2026):","");if(n===null)return;n=n.trim();
+  if(!n){toast("Please enter a month name");return}
+  if(nameTaken(n)){toast("A month with that name already exists");return}
+  var m={id:uid(),name:n,sales:[]};S.months.push(m);S.cur=m.id;editS=null;save();renderS();setInv();toast("Created sheet: "+n);
+};
+$("renM").onclick=function(){
+  var m=M(),n=prompt("Rename month:",m.name);if(n===null)return;n=n.trim();
+  if(!n)return;if(nameTaken(n,m.id)){toast("A month with that name already exists");return}
+  m.name=n;save();renderS();
+};
+$("delM").onclick=function(){
+  var m=M();if(S.months.length<2){toast("You need at least one month sheet");return}
+  if(!confirm('Delete the month "'+m.name+'" and its '+m.sales.length+' entries? This cannot be undone (export a backup first if unsure).'))return;
+  S.months=S.months.filter(function(x){return x.id!==m.id});S.cur=S.months[S.months.length-1].id;editS=null;save();renderS();setInv();
+};
+
+/* ---------- backup ---------- */
+$("bkExp").onclick=function(){
+  var d=new Date(),ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  dl("HHH_SalesBook_Backup_"+ds+".json",JSON.stringify({app:"salesbook",version:2,exported:d.toISOString(),cur:S.cur,months:S.months,cust:S.cust},null,2),"application/json");
+};
+$("bkImp").onclick=function(){$("bkFile").click()};
+$("bkFile").onchange=function(){
+  var f=this.files[0];this.value="";if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var p=JSON.parse(rd.result);
+      if(!p||!(Array.isArray(p.months)||Array.isArray(p.sales))||!Array.isArray(p.cust))throw 0;
+      var n=normalize(p),tot=n.months.reduce(function(t,m){return t+m.sales.length},0);
+      if(!confirm("Import "+n.months.length+" month sheet(s), "+tot+" sales entries and "+n.cust.length+" customers?\n\nOK = replace current data\nCancel = keep current data"))return;
+      S=n;editS=editC=null;save();renderS();renderC();setInv();toast("Backup imported");
+    }catch(e){toast("Not a valid Sales Book backup file")}
+  };
+  rd.readAsText(f);
+};
+
+document.addEventListener("wheel",function(){var a=document.activeElement;if(a&&a.type==="number")a.blur()},{passive:true});
+applyMode();
+setInv();
+})();
+</script>
+</body>
+</html>
